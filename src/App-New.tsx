@@ -462,7 +462,9 @@ function App() {
           padding: "1.5rem",
         }}
       >
-        <h1>AttentionBanana</h1>
+        <h1 style={{ fontSize: "2.2rem" }}>
+          AttentionBanana 🍌
+        </h1>
 
         <div style={{ fontSize: "0.85rem", color: "#555", marginBottom: "0.75rem" }}>
           MorphCast status: {mcStatus}
@@ -624,7 +626,7 @@ function App() {
                 marginBottom: "0.5rem",
               }}
             >
-              <h3 style={{ margin: 0 }}>⚡ Engagement Assistant</h3>
+              <h3 style={{ margin: 0 }}>🍌 Engagement Assistant</h3>
               <span
                 style={{
                   fontSize: "0.75rem",
