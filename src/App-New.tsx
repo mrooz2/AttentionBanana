@@ -13,6 +13,10 @@ function App() {
   // Variables for meeting inputs
   const [meetingIdInput, setMeetingIdInput] = useState("");
   const [passcodeInput, setPasscodeInput] = useState("");
+
+  const [engagementLog, setEngagementLog] = useState< 
+  { time: String; attention: number | null; emotion: string | null; level: string} []
+  >([]);
   
 
   const authEndpoint = "http://localhost:4000"; // http://localhost:4000
@@ -23,6 +27,42 @@ function App() {
   const userEmail = "";
   const registrantToken = "";
   const zakToken = "";
+
+  const engagementLevel = 
+    attention == null
+    ? "Unknown"
+    : attention > 0.7
+    ? "High"
+    : attention > 0.4
+    ? "Medium"
+    : "Low";
+
+  useEffect(() => {
+    if (attention === null && emotion === null) return;
+
+    const now = new Date();
+    const level =
+      attention == null
+      ? "Unknown"
+      : attention > 0.7
+      ? "High"
+      : attention > 0.4
+      ? "Medium"
+      : "Low";
+    const entry = {
+      time: now.toLocaleTimeString(),
+      attention,
+      emotion,
+      level,
+    };
+
+    setEngagementLog((prev) => {
+      const next = [...passWord, entry];
+      if (next.length > 30) next.shift();
+      return next;
+    });
+  }, [attention, emotion]);
+
 
   const getSignature = async () => {
     console.log("Join clicked");
@@ -138,25 +178,51 @@ function App() {
   }, []);
   
 
-  return (
+return (
     <div className="App">
       <main>
         <h1>AttentionBanana</h1>
-  
+
+        {/* Live engagement summary */}
         <div style={{ marginBottom: "1rem" }}>
           <strong>Live engagement (you):</strong>
           <div>Emotion: {emotion ?? "N/A"}</div>
-          <div>
-            Attention:{" "}
-            {attention !== null ? attention.toFixed(2) : "N/A"}
-          </div>
+          <div>Attention: {attention !== null ? attention.toFixed(2) : "N/A"}</div>
+          <div>Engagement level: {engagementLevel}</div>
         </div>
-  
+
+        {/* Engagement history */}
+        <div style={{ marginBottom: "1rem", maxHeight: "200px", overflowY: "auto" }}>
+          <h3>Recent engagement samples</h3>
+          <table style={{ width: "100%", fontSize: "0.85rem" }}>
+            <thead>
+              <tr>
+                <th align="left">Time</th>
+                <th align="left">Attention</th>
+                <th align="left">Emotion</th>
+                <th align="left">Level</th>
+              </tr>
+            </thead>
+            <tbody>
+              {engagementLog.map((entry, idx) => (
+                <tr key={idx}>
+                  <td>{entry.time}</td>
+                  <td>{entry.attention !== null ? entry.attention.toFixed(2) : "N/A"}</td>
+                  <td>{entry.emotion ?? "N/A"}</td>
+                  <td>{entry.level}</td>
+                </tr>
+              ))}
+            </tbody>
+          </table>
+        </div>
+
+        {/* Zoom component view container */}
         <div id="meetingSDKElement">
           {/* Zoom Meeting SDK Component View Rendered Here */}
         </div>
 
-        <div style={{ marginBottom: "1rem" }}>
+        {/* Join form */}
+        <div style={{ marginTop: "1rem", marginBottom: "1rem" }}>
           <h3>Join a Zoom Meeting</h3>
 
           <label>
@@ -170,7 +236,8 @@ function App() {
             />
           </label>
 
-          <br /><br />
+          <br />
+          <br />
 
           <label>
             Passcode:
@@ -183,7 +250,7 @@ function App() {
             />
           </label>
         </div>
-  
+
         <button onClick={getSignature}>Join Meeting</button>
       </main>
     </div>
