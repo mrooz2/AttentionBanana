@@ -766,7 +766,7 @@ function App() {
                     })
                   }
                 >
-                  I'd like a quick check-in
+                  I'd Like a Quick Check-In
                 </button>
                 <button
                   onClick={() =>
@@ -779,7 +779,7 @@ function App() {
                     })
                   }
                 >
-                  Let's mark this moment
+                  Mark this Moment
                 </button>
               </div>
             </div>
